@@ -86,3 +86,15 @@ export type InvoiceForm = {
   amount: number;
   status: 'pending' | 'paid';
 };
+
+export type SearchSuggestion = {
+  id: string;
+  name: string;
+  image_url: string;
+  type: 'customer' | 'invoice';
+  // customer fields
+  email?: string;
+  // invoice fields
+  amount?: number;
+  status?: 'pending' | 'paid';
+};

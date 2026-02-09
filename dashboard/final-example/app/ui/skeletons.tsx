@@ -163,6 +163,47 @@ export function InvoicesMobileSkeleton() {
   );
 }
 
+export function SearchSuggestionsSkeleton() {
+  return (
+    <div className="max-h-72 overflow-y-auto p-2">
+      {/* "Customers" group skeleton */}
+      <div className="px-2 pb-1 pt-3">
+        <div className="h-3 w-20 rounded bg-gray-200" />
+      </div>
+      {[...Array(2)].map((_, i) => (
+        <div
+          key={`customer-skeleton-${i}`}
+          className={`${shimmer} relative flex items-center gap-3 overflow-hidden rounded-lg px-2 py-2`}
+        >
+          <div className="h-8 w-8 shrink-0 rounded-full bg-gray-200" />
+          <div className="flex-1 space-y-1.5">
+            <div className="h-4 w-28 rounded bg-gray-200" />
+            <div className="h-3 w-36 rounded bg-gray-200" />
+          </div>
+          <div className="h-5 w-16 shrink-0 rounded-full bg-gray-100" />
+        </div>
+      ))}
+      {/* "Invoices" group skeleton */}
+      <div className="px-2 pb-1 pt-3">
+        <div className="h-3 w-16 rounded bg-gray-200" />
+      </div>
+      {[...Array(3)].map((_, i) => (
+        <div
+          key={`invoice-skeleton-${i}`}
+          className={`${shimmer} relative flex items-center gap-3 overflow-hidden rounded-lg px-2 py-2`}
+        >
+          <div className="h-8 w-8 shrink-0 rounded-full bg-gray-200" />
+          <div className="flex-1 space-y-1.5">
+            <div className="h-4 w-24 rounded bg-gray-200" />
+            <div className="h-3 w-32 rounded bg-gray-200" />
+          </div>
+          <div className="h-5 w-14 shrink-0 rounded-full bg-gray-100" />
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export function InvoicesTableSkeleton() {
   return (
     <div className="mt-6 flow-root">

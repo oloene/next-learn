@@ -6,6 +6,7 @@ import {
   InvoicesTable,
   LatestInvoiceRaw,
   Revenue,
+  SearchSuggestion,
 } from './definitions';
 import { formatCurrency } from './utils';
 
@@ -214,5 +215,54 @@ export async function fetchFilteredCustomers(query: string) {
   } catch (err) {
     console.error('Database Error:', err);
     throw new Error('Failed to fetch customer table.');
+  }
+}
+
+export async function fetchSearchSuggestions(query: string) {
+  if (!query || query.length < 2) return [];
+
+  try {
+    const customerResults = sql<SearchSuggestion[]>`
+      SELECT
+        id,
+        name,
+        email,
+        image_url,
+        'customer' AS type
+      FROM customers
+      WHERE
+        name ILIKE ${`%${query}%`} OR
+        email ILIKE ${`%${query}%`}
+      LIMIT 5
+    `;
+
+    const invoiceResults = sql<SearchSuggestion[]>`
+      SELECT
+        invoices.id,
+        customers.name,
+        customers.image_url,
+        invoices.amount,
+        invoices.status,
+        'invoice' AS type
+      FROM invoices
+      JOIN customers ON invoices.customer_id = customers.id
+      WHERE
+        customers.name ILIKE ${`%${query}%`} OR
+        customers.email ILIKE ${`%${query}%`} OR
+        invoices.amount::text ILIKE ${`%${query}%`} OR
+        invoices.status ILIKE ${`%${query}%`}
+      ORDER BY invoices.date DESC
+      LIMIT 5
+    `;
+
+    const [customers, invoices] = await Promise.all([
+      customerResults,
+      invoiceResults,
+    ]);
+
+    return [...customers, ...invoices];
+  } catch (error) {
+    console.error('Database Error:', error);
+    return [];
   }
 }
